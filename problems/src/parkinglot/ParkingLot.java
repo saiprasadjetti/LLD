@@ -34,18 +34,21 @@ public class ParkingLot {
                 if(spot.assignVehicle(vehicle)){
                     ParkingTicket parkingTicket = new ParkingTicket(vehicle,spot);
                     activeTickets.put(vehicle.getLicenceNumber(),parkingTicket);
+                    System.out.println("vehicle is parked successfully with ticket id"+ parkingTicket.getTicketId());
                     return parkingTicket;
                 }
             }
         }
-        throw new Exception("No avalable spot for"+ vehicle.getType());
+        throw new Exception("No avalable spot for "+ vehicle.getType()+" with licence Number "+vehicle.getLicenceNumber());
     }
 
     synchronized double unparkVehicle(String licence){
         ParkingTicket ticket = activeTickets.get(licence);
         ticket.getParkingSpot().removeVehicle();
         ticket.setExitTimestamp();
-        return feeStrategy.calculateFee(ticket);
+        double fee =  feeStrategy.calculateFee(ticket);
+        System.out.println("vehicle with licence number: "+licence+" un parked with fee: "+fee);
+        return fee;
     }
 
 
